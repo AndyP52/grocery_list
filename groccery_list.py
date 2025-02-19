@@ -9,10 +9,10 @@ Purpose: Create a grocery database
 # import libary
 import sqlite3
 
-DATABASE = 'grocery_list.db'
+DATABASE = 'groccery_list.db'
 
 CREATE_TABLE = """
-    CREATE TABLE IF NOT EXISTS tbl_grocery (
+    CREATE TABLE IF NOT EXISTS tbl_groccery (
         grc_id      INTEGER PRIMARY KEY,
         grc_name   TEXT,
         grc_type    TEXT,
@@ -21,7 +21,7 @@ CREATE_TABLE = """
     );
     """
 INSERT_INTO_TABLE = """
-    INSERT INTO tbl_grocery (
+    INSERT INTO tbl_groccery (
     grc_name,
     grc_type,
     grc_price,
@@ -29,9 +29,9 @@ INSERT_INTO_TABLE = """
     ) VALUES (?, ?, ?, ?);
 """
 
-FETCH_ALL_GROCERYS = "Select * From tbl_grocery;"
+FETCH_ALL_GROCCERYS = "Select * From tbl_groccery;"
 
-DELETE_GROCERY = "DELETE FROM tbl_grocery WHERE grc_id = ?"
+DELETE_GROCCERY = "DELETE FROM tbl_groccery WHERE grc_id = ?"
 
 # create the table
 def create_table():
@@ -42,7 +42,7 @@ def create_table():
         # execute the scipt against database
         cursor.execute(CREATE_TABLE)
 
-def add_grocery(grc_name, grc_type, grc_price, grc_quantity):
+def add_groccery(grc_name, grc_type, grc_price, grc_quantity):
     with sqlite3.connect(DATABASE) as connection:
         cursor = connection.cursor()
 
@@ -51,18 +51,18 @@ def add_grocery(grc_name, grc_type, grc_price, grc_quantity):
             (grc_name, grc_type, grc_price, grc_quantity)
         )
 
-def fetch_all_grocerys():
+def fetch_all_groccerys():
     with sqlite3.connect(DATABASE) as connection:
         cursor = connection.cursor()
 
-        grocerys = cursor.execute(FETCH_ALL_GROCERYS).fetchall()
+        grocerys = cursor.execute(FETCH_ALL_GROCCERYS).fetchall()
 
         return grocerys
     
-def delete_grocery(grc_id):
+def delete_groccery(grc_id):
     with sqlite3.connect(DATABASE) as connection:
 
         cursor = connection.cursor()
 
-        cursor.execute(DELETE_GROCERY, (grc_id, ))
+        cursor.execute(DELETE_GROCCERY, (grc_id, ))
 
