@@ -12,8 +12,9 @@ import shopping_list
 MENU_PROMPT = """------ Groccery Inventory App    ------
 (1) Add Groccery
 (2) Display All Groccery
-(3) Delete a Groccery
-(4) Exit
+(3) Update Groccery
+(4) Delete a Groccery
+(5) Exit
 Your Selection: """
 
 THRESHOLD = 1
@@ -38,15 +39,24 @@ def menu():
                 groccery_type,
                 groccery_price,
                 groccery_quantity
-
             )
 
             display_all_groccerys()
 
         elif user_input == "2":
             display_all_groccerys()
-            
+
         elif user_input == "3":
+            display_all_groccerys()
+
+            groccery_id = int(input("Enter Groccery ID: "))
+            groccery_quantity = int(input("Enter Groccery Quantity: "))
+
+            groccery_list.update_groccery(groccery_id, groccery_quantity)
+
+            display_all_groccerys()
+            
+        elif user_input == "4":
             display_all_groccerys()
 
             groccery_id = int(input("Enter Groccery ID: "))
@@ -54,7 +64,7 @@ def menu():
             groccery_list.delete_groccery(groccery_id)
 
             display_all_groccerys()
-        elif user_input == "4":
+        elif user_input == "5":
             break
         else:
             print("Invalid input, please try again!")
@@ -74,7 +84,10 @@ def display_all_groccerys():
 
 def check_inventory():
     grocceries = groccery_list.fetch_all_groccerys()
+    sh_list = shopping_list.fetch_all_groccerys()
     shopping_list.create_table()
+    print("Shopping List")
+    updated = False
     for item in grocceries:
         if item[4] <= THRESHOLD:
             print(f"running low on {item[1]}'s")
@@ -84,16 +97,23 @@ def check_inventory():
             groccery_price = item[3]
             groccery_quantity = THRESHOLD - item[4]
 
-            shopping_list.add_groccery(
-                groccery_name,
-                groccery_type,
-                groccery_price,
-                groccery_quantity
-            )
-    groccerys = shopping_list.fetch_all_groccerys()
+            for groc in sh_list:
+                if groccery_name == groc[1]:
+                    shopping_list.update_groccery(groc[0], groccery_quantity)
+                    if groccery_quantity == 0:
+                        shopping_list.delete_groccery(groc[0])
+                    updated = True
+                    break
+            if updated == False:
+                shopping_list.add_groccery(
+                    groccery_name,
+                    groccery_type,
+                    groccery_price,
+                    groccery_quantity
+                )
 
     list = tabulate.tabulate(
-        groccerys,
+        sh_list,
         headers=["Groccery ID","Groccery Name","Groccery Type","Groccery Price","Groccery Quantity"],
         tablefmt="psql"
     )

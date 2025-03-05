@@ -33,6 +33,12 @@ FETCH_ALL_GROCCERYS = "Select * From tbl_shopping;"
 
 DELETE_GROCCERY = "DELETE FROM tbl_shopping WHERE grc_id = ?"
 
+UPDATE_GROCCERY = """
+UPDATE tbl_shopping
+SET grc_quantity = ?
+WHERE grc_id = ?
+"""
+
 # create the table
 def create_table():
     with sqlite3.connect(DATABASE) as connection:
@@ -65,3 +71,11 @@ def delete_groccery(grc_id):
         cursor = connection.cursor()
 
         cursor.execute(DELETE_GROCCERY, (grc_id, ))
+
+def update_groccery(grc_id, grc_quantity):
+    with sqlite3.connect(DATABASE) as connection:
+        cursor = connection.cursor()
+
+        cursor.execute(UPDATE_GROCCERY, (grc_quantity, grc_id))
+
+        connection.commit()
